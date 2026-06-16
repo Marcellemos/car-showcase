@@ -1,0 +1,919 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  overflow: hidden; /* the slider owns the viewport */
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+:root {
+  --color-bg:        #07060a;
+  --color-bg-soft:   #0f0e14;
+  --color-surface:   rgba(255, 255, 255, 0.06);
+  --color-surface-2: rgba(255, 255, 255, 0.10);
+  --color-border:    rgba(255, 255, 255, 0.12);
+  --color-text:      #f5f3ee;
+  --color-text-dim:  #b9b6c2;
+  --color-muted:     #82808d;
+
+  --color-gold:        #d4af6a;
+  --color-gold-bright: #f4d9a0;
+  --accent: #d4af6a;
+  --accent-soft: rgba(212, 175, 106, 0.35);
+
+  --font-display: 'Oswald', 'Arial Narrow', sans-serif;
+  --font-body:    'Outfit', 'Segoe UI', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth:    cubic-bezier(0.65, 0, 0.35, 1);
+  --t-slow:  1.1s;
+  --t-med:   0.6s;
+  --t-fast:  0.3s;
+
+  --panel-blur: 18px;
+  --autoplay-duration: 6000ms;
+}
+
+.slider {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--color-bg);
+  /* smooth transition whenever the accent variable changes between slides */
+  transition: background var(--t-slow) var(--ease-smooth);
+}
+
+
+/* ---------------------------------------------------------------------
+   4. AMBIENT ATMOSPHERE — grain texture + edge vignette
+--------------------------------------------------------------------- */
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image:
+    radial-gradient(circle at 20% 30%, #fff 0.5px, transparent 0.5px),
+    radial-gradient(circle at 70% 65%, #fff 0.5px, transparent 0.5px),
+    radial-gradient(circle at 40% 80%, #fff 0.5px, transparent 0.5px);
+  background-size: 6px 6px, 9px 9px, 7px 7px;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 31;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 35%);
+}
+
+
+/* ---------------------------------------------------------------------
+   5. BRAND HEADER
+--------------------------------------------------------------------- */
+.brand {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.75rem clamp(1.25rem, 4vw, 3.5rem);
+  letter-spacing: 0.18em;
+  pointer-events: none;
+}
+
+.brand__mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--accent);
+  box-shadow: 0 0 16px var(--accent-soft);
+  transition: color var(--t-slow) var(--ease-smooth), box-shadow var(--t-slow) var(--ease-smooth);
+}
+
+.brand__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.brand__tag {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  display: none;
+}
+
+@media (min-width: 700px) {
+  .brand__tag { display: inline; }
+}
+
+
+/* ---------------------------------------------------------------------
+   6. SLIDE STAGE & BACKGROUND LAYERS
+--------------------------------------------------------------------- */
+.slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1;
+  /* cinematic cross-fade between slides */
+  transition: opacity var(--t-slow) var(--ease-cinematic), visibility var(--t-slow);
+}
+
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+
+/* Full-bleed background photo, slow continuous "ken burns" zoom while active */
+.slide__bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.slide__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+
+  transform: scale(1.12);
+  filter: saturate(1.05) brightness(0.85);
+  transition: transform 7s var(--ease-smooth);
+  will-change: transform;
+}
+
+.slide.active .slide__bg img {
+  transform: scale(1);
+}
+
+/* Dark gradient overlay so text & UI stay readable on any photo */
+.slide__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(110deg,
+      rgba(5,4,8,0.94) 0%,
+      rgba(5,4,8,0.78) 28%,
+      rgba(5,4,8,0.35) 55%,
+      rgba(5,4,8,0.55) 100%);
+}
+
+/* Animated gradient "sweep" of light across the frame — moves continuously
+   while the slide is active to suggest motion / studio lighting */
+.slide__gradient-sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg,
+    transparent 30%,
+    var(--accent-soft) 48%,
+    transparent 66%);
+  background-size: 250% 250%;
+  opacity: 0;
+  mix-blend-mode: soft-light;
+  transition: opacity var(--t-slow) var(--ease-smooth);
+}
+
+.slide.active .slide__gradient-sweep {
+  opacity: 0.55;
+  animation: sweepMove 9s linear infinite;
+}
+
+
+/* ---------------------------------------------------------------------
+   7. FEATURED CAR IMAGE — slide-in with rotation + zoom + glow frame
+--------------------------------------------------------------------- */
+.slide__image-wrap {
+  position: absolute;
+  right: clamp(1rem, 5vw, 6vw);
+  bottom: clamp(2rem, 8vh, 9vh);
+  width: min(58vw, 920px);
+  max-width: 92vw;
+  z-index: 5;
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.65));
+  opacity: 0;
+  transform: translateX(18%) rotate(8deg) scale(0.88);
+}
+
+/* JS adds .reveal to (re)trigger this entrance every time a slide activates */
+.slide.active .slide__image-wrap.reveal {
+  animation: imageSlideIn 1.4s var(--ease-cinematic) forwards;
+}
+
+.slide__image {
+  width: 100%;
+  border-radius: 18px;
+  object-fit: cover;
+  aspect-ratio: 16 / 9;
+}
+
+/* Soft glowing aura behind the hero car image, tinted per-slide */
+.slide__image-glow {
+  position: absolute;
+  inset: -6%;
+  z-index: -1;
+  border-radius: 28px;
+  background: radial-gradient(circle at 60% 50%, var(--accent-soft), transparent 70%);
+  filter: blur(40px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+
+/* ---------------------------------------------------------------------
+   8. GLASSMORPHISM INFO PANEL + STAGGERED TEXT REVEAL
+--------------------------------------------------------------------- */
+.slide__content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  padding: 0 clamp(1.25rem, 5vw, 5.5rem);
+}
+
+.info-panel {
+  max-width: 620px;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  background: linear-gradient(150deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  border: 1px solid var(--color-border);
+  border-radius: 22px;
+  backdrop-filter: blur(var(--panel-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(140%);
+  box-shadow:
+    0 25px 60px -20px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+/* Every direct text element starts invisible/offset; JS adds .reveal to the
+   panel which triggers each child's staggered fade/slide/scale-in via
+   nth-child animation-delay. */
+.info-panel > * {
+  opacity: 0;
+  transform: translateY(28px) scale(0.97);
+}
+
+.info-panel.reveal > * {
+  animation: contentRise 0.85s var(--ease-cinematic) forwards;
+}
+
+/* staggered delays — eyebrow leads, CTAs land last */
+.info-panel.reveal > *:nth-child(1) { animation-delay: 0.05s; }
+.info-panel.reveal > *:nth-child(2) { animation-delay: 0.16s; }
+.info-panel.reveal > *:nth-child(3) { animation-delay: 0.27s; }
+.info-panel.reveal > *:nth-child(4) { animation-delay: 0.38s; }
+.info-panel.reveal > *:nth-child(5) { animation-delay: 0.50s; }
+.info-panel.reveal > *:nth-child(6) { animation-delay: 0.62s; }
+
+.info-panel__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  transition: color var(--t-slow) var(--ease-smooth);
+}
+
+.info-panel__title {
+  margin-top: 0.35rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.info-panel__model {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.85rem;
+  transition: color var(--t-slow) var(--ease-smooth);
+}
+
+.info-panel__desc {
+  font-size: clamp(0.88rem, 1.4vw, 1rem);
+  line-height: 1.7;
+  color: var(--color-text-dim);
+  max-width: 46ch;
+}
+
+/* Spec grid (price / hp / 0-60 / top speed) */
+.info-panel__specs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.spec__value {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: clamp(0.95rem, 1.8vw, 1.25rem);
+  color: var(--color-text);
+  text-shadow: 0 0 12px var(--accent-soft);
+}
+
+.spec__label {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+
+/* ---------------------------------------------------------------------
+   9. BUTTONS — primary / ghost with ripple hover
+--------------------------------------------------------------------- */
+.info-panel__cta {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  padding: 0.85rem 1.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  transition: transform var(--t-fast) var(--ease-smooth),
+              box-shadow var(--t-fast) var(--ease-smooth),
+              color var(--t-fast) var(--ease-smooth),
+              border-color var(--t-fast) var(--ease-smooth);
+}
+
+.btn--primary {
+  color: #1a1408;
+  background: linear-gradient(135deg, var(--accent), var(--color-gold-bright));
+  box-shadow: 0 8px 24px -8px var(--accent-soft);
+}
+
+.btn--ghost {
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-border);
+}
+
+/* Ripple: a radial pulse that expands from the pointer position */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.45), transparent 60%);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--t-fast) ease-out, transform var(--t-fast) ease-out;
+  pointer-events: none;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+}
+
+.btn--primary:hover {
+  box-shadow: 0 14px 32px -10px var(--accent-soft);
+}
+
+.btn--ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn:hover::after,
+.btn:focus-visible::after {
+  opacity: 1;
+  transform: scale(1.4);
+}
+
+
+/* ---------------------------------------------------------------------
+   10. PREV / NEXT NAVIGATION ARROWS
+--------------------------------------------------------------------- */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: clamp(44px, 5vw, 58px);
+  height: clamp(44px, 5vw, 58px);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(10px);
+  color: var(--color-text);
+  overflow: hidden;
+  transition: border-color var(--t-fast) var(--ease-smooth),
+              color var(--t-fast) var(--ease-smooth),
+              transform var(--t-fast) var(--ease-smooth);
+}
+
+.nav-btn svg {
+  width: 45%;
+  height: 45%;
+  position: relative;
+  z-index: 1;
+}
+
+.nav-btn--prev { left: clamp(0.75rem, 2.5vw, 2.5rem); }
+.nav-btn--next { right: clamp(0.75rem, 2.5vw, 2.5rem); }
+
+/* Ripple pulse on hover/focus, expanding from the center */
+.nav-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  transform: scale(0);
+  transition: transform 0.5s var(--ease-smooth), opacity 0.5s var(--ease-smooth);
+}
+
+.nav-btn:hover,
+.nav-btn:focus-visible {
+  border-color: var(--accent);
+  color: #1a1408;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.nav-btn:hover::before,
+.nav-btn:focus-visible::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.nav-btn:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+
+/* ---------------------------------------------------------------------
+   11. BOTTOM CONTROL CLUSTER
+--------------------------------------------------------------------- */
+.control-cluster {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  padding: 0 clamp(1.25rem, 5vw, 3.5rem) clamp(1rem, 2.5vh, 1.75rem);
+}
+
+/* --- Progress bar: fills over the autoplay duration, pauses on hover --- */
+.progress-bar {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+  margin-bottom: 1.1rem;
+}
+
+.progress-bar__fill {
+  position: absolute;
+  inset: 0;
+  width: 0%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--color-gold-bright));
+  box-shadow: 0 0 12px var(--accent-soft);
+  transform-origin: left center;
+}
+
+/* JS toggles this class to (re)start the fill animation */
+.progress-bar__fill.running {
+  animation: progressFill var(--autoplay-duration) linear forwards;
+}
+
+/* pause the fill (and its visual width holds) when the slider is hovered */
+.slider.is-paused .progress-bar__fill.running {
+  animation-play-state: paused;
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+}
+
+/* --- Pagination dots --- */
+.pagination {
+  display: flex;
+  gap: 0.55rem;
+  flex-shrink: 0;
+}
+
+.pagination__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  transition: background var(--t-fast) var(--ease-smooth),
+              transform var(--t-fast) var(--ease-smooth),
+              box-shadow var(--t-fast) var(--ease-smooth),
+              width var(--t-med) var(--ease-smooth);
+}
+
+.pagination__dot:hover {
+  background: rgba(255,255,255,0.4);
+  transform: scale(1.2);
+}
+
+.pagination__dot.active {
+  width: 26px;
+  border-radius: 5px;
+  background: var(--accent);
+  box-shadow: 0 0 14px var(--accent-soft);
+  animation: dotPulse 0.5s var(--ease-cinematic);
+}
+
+/* --- Thumbnails --- */
+.thumbnails {
+  display: flex;
+  gap: 0.65rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.thumbnails::-webkit-scrollbar { display: none; }
+
+.thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(58px, 7vw, 84px);
+  height: clamp(40px, 5vw, 56px);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid transparent;
+  opacity: 0.55;
+  transform: scale(0.94);
+  transition: opacity var(--t-med) var(--ease-smooth),
+              transform var(--t-med) var(--ease-cinematic),
+              border-color var(--t-med) var(--ease-smooth),
+              box-shadow var(--t-med) var(--ease-smooth);
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb__label {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 0.18rem 0.4rem;
+  font-size: 0.55rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--color-text);
+  background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity var(--t-fast) ease, transform var(--t-fast) ease;
+}
+
+.thumb:hover {
+  opacity: 0.9;
+  transform: scale(1.0);
+}
+
+.thumb:hover .thumb__label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.thumb.active {
+  opacity: 1;
+  transform: scale(1.06);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 8px 22px -6px var(--accent-soft), 0 0 22px var(--accent-soft);
+  animation: thumbGlow 2.6s ease-in-out infinite;
+}
+
+.thumb.active .thumb__label {
+  opacity: 1;
+  transform: translateY(0);
+  color: var(--accent);
+}
+
+/* --- Slide counter --- */
+.counter {
+  display: none;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+
+.counter__current {
+  font-size: 1.1rem;
+  color: var(--accent);
+  transition: color var(--t-slow) var(--ease-smooth);
+}
+
+.counter__divider,
+.counter__total {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+@media (min-width: 640px) {
+  .counter { display: flex; }
+}
+
+
+/* ---------------------------------------------------------------------
+   12. KEYFRAME ANIMATION LIBRARY
+--------------------------------------------------------------------- */
+
+/* Slow continuous zoom on the active background photo */
+@keyframes kenBurns {
+  from { transform: scale(1.0)  translate3d(0,0,0); }
+  to   { transform: scale(1.08) translate3d(-1.5%, -1%, 0); }
+}
+
+/* Diagonal light sweep drifting across the frame */
+@keyframes sweepMove {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+/* Hero car image: slides in from the right with a slight rotation,
+   settling into place while scaling up to full size (zoom-in on activate) */
+@keyframes imageSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(22%) translateY(2%) rotate(9deg) scale(0.82);
+    filter: blur(6px) drop-shadow(0 30px 60px rgba(0,0,0,0.65));
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(-2%) rotate(-1.5deg) scale(1.03);
+    filter: blur(0px) drop-shadow(0 30px 60px rgba(0,0,0,0.65));
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+    filter: blur(0px) drop-shadow(0 30px 60px rgba(0,0,0,0.65));
+  }
+}
+
+/* Text content: fade + slide-up + scale, used staggered across info panel children */
+@keyframes contentRise {
+  0% {
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Progress bar fill, runs over --autoplay-duration */
+@keyframes progressFill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* Active pagination dot "pop" */
+@keyframes dotPulse {
+  0%   { transform: scaleX(0.4); }
+  60%  { transform: scaleX(1.15); }
+  100% { transform: scaleX(1); }
+}
+
+/* Active thumbnail breathing glow */
+@keyframes thumbGlow {
+  0%, 100% { box-shadow: 0 0 0 1px var(--accent), 0 8px 22px -6px var(--accent-soft), 0 0 16px var(--accent-soft); }
+  50%      { box-shadow: 0 0 0 1px var(--accent), 0 8px 28px -6px var(--accent-soft), 0 0 30px var(--accent-soft); }
+}
+
+/* Generic fade-in used for first paint */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+/* ---------------------------------------------------------------------
+   13. ACCESSIBILITY & REDUCED MOTION
+--------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .slide.active .slide__bg,
+  .slide.active .slide__gradient-sweep,
+  .thumb.active {
+    animation: none !important;
+  }
+}
+
+
+/* ---------------------------------------------------------------------
+   14. RESPONSIVE BREAKPOINTS
+--------------------------------------------------------------------- */
+
+/* ----- Tablet ----- */
+@media (max-width: 1024px) {
+  .slide__image-wrap {
+    width: min(70vw, 760px);
+    bottom: 13rem;
+  }
+
+  .info-panel {
+    max-width: 90vw;
+  }
+
+  .info-panel__specs {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+}
+
+/* ----- Mobile ----- */
+@media (max-width: 720px) {
+  .slide {
+    align-items: flex-start;
+  }
+
+  .slide__bg {
+    filter: saturate(1.05) brightness(0.6);
+  }
+
+  .slide__overlay {
+    background:
+      linear-gradient(to bottom,
+        rgba(5,4,8,0.55) 0%,
+        rgba(5,4,8,0.55) 38%,
+        rgba(5,4,8,0.97) 78%,
+        rgba(5,4,8,1) 100%);
+  }
+
+  /* Image becomes a full-width banner near the top of the screen */
+  .slide__image-wrap {
+    position: absolute;
+    top: 5.5rem;
+    right: 5%;
+    left: 5%;
+    bottom: auto;
+    width: 90%;
+  }
+
+  .slide__image {
+    aspect-ratio: 4 / 3;
+  }
+
+  .slide__content {
+    margin-top: auto;
+    padding-bottom: 7.5rem;
+  }
+
+  .info-panel {
+    max-width: 100%;
+    padding: 1.25rem 1.25rem 1.5rem;
+    border-radius: 18px;
+  }
+
+  .info-panel__title {
+    font-size: clamp(2.2rem, 11vw, 3rem);
+  }
+
+  .info-panel__desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .info-panel__specs {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 0.9rem;
+  }
+
+  .nav-btn {
+    top: auto;
+    bottom: 11.5rem;
+    transform: none;
+  }
+
+  .nav-btn:hover,
+  .nav-btn:focus-visible,
+  .nav-btn:active {
+    transform: scale(1.05);
+  }
+
+  .nav-btn--prev { left: 1rem; }
+  .nav-btn--next { right: 1rem; }
+
+  .control-row {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .pagination { order: 2; }
+  .thumbnails { order: 1; width: 100%; }
+  .counter { order: 3; }
+
+  .thumb__label { display: none; }
+}
+
+/* ----- Small phones ----- */
+@media (max-width: 380px) {
+  .info-panel__specs { grid-template-columns: repeat(2, 1fr); }
+  .info-panel__title { font-size: 2.1rem; }
+  .brand { padding: 1.25rem 1rem; }
+}

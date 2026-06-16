@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LEMOS Car Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <main class="slider" id="slider" role="region" aria-roledescription="carousel" aria-label="Luxury sports car showcase">
+
+    <div class="grain" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <header class="brand">
+      <span class="brand__mark" aria-hidden="true">LCS</span>
+      <span class="brand__name">LEMOS Car Showcase</span>
+      <span class="brand__tag">Est. Performance</span>
+    </header>
+
+    <div class="slides" id="slidesTrack">
+
+      <section class="slide active"
+               data-index="0"
+               data-accent="#f2c14e"
+               aria-roledescription="slide"
+               aria-label="1 of 5: Lamborghini Huracán STO"
+               role="group">
+        <div class="slide__bg">
+            <img src="./img/arteon.png" alt="arteon">
+        </div>
+        <div class="slide__overlay"></div>
+        <div class="slide__gradient-sweep" aria-hidden="true"></div>
+
+        <div class="slide__image-wrap">
+          <img class="slide__image" src="img/arteon.png" alt="Arteon">
+          <div class="slide__image-glow" aria-hidden="true"></div>
+        </div>
+
+        <div class="slide__content">
+          <div class="info-panel">
+            <p class="info-panel__eyebrow">Volkswagen</p>
+            <h1 class="info-panel__title">Arteon</h1>
+            <p class="info-panel__desc">Design que chama atenção sem precisar exagerar. O VW que parece ter saído de uma categoria acima, esportividade, sofisticação e personalidade no mesmo carro.</p>
+
+            <ul class="info-panel__specs">
+              <li class="spec"><span class="spec__value">R$180.000</span><span class="spec__label">Preço</span></li>
+              <li class="spec"><span class="spec__value">320 cv</span><span class="spec__label">Potência</span></li>
+              <li class="spec"><span class="spec__value">4.9s</span><span class="spec__label">0&ndash;100 km/h</span></li>
+              <li class="spec"><span class="spec__value">250 km/h</span><span class="spec__label">Top Speed</span></li>
+            </ul>
+
+            <div class="info-panel__cta">
+              <button class="btn btn--primary">Monte o seu</button>
+              <button class="btn btn--ghost">veja mais</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide"
+               data-index="1"
+               data-accent="#e63946"
+               aria-roledescription="slide"
+               aria-label="2 of 5: Ferrari 488 Pista"
+               role="group">
+        <div class="slide__bg">
+            <img src="./img/tundra.png">
+        </div>
+        <div class="slide__overlay"></div>
+        <div class="slide__gradient-sweep" aria-hidden="true"></div>
+
+        <div class="slide__image-wrap">
+          <img class="slide__image" src="img/tundra.png" alt="Tundra">
+          <div class="slide__image-glow" aria-hidden="true"></div>
+        </div>
+
+        <div class="slide__content">
+          <div class="info-panel">
+            <p class="info-panel__eyebrow">Toyota</p>
+            <h1 class="info-panel__title">Tundra</h1>
+            <p class="info-panel__desc">A Tundra não pede passagem, ela abre caminho. Força bruta com a confiabilidade que só a Toyota entrega. Grande no tamanho, gigante na presença.</p>
+
+            <ul class="info-panel__specs">
+              <li class="spec"><span class="spec__value">R$300.000</span><span class="spec__label">Preço</span></li>
+              <li class="spec"><span class="spec__value">360 cv</span><span class="spec__label">Potência</span></li>
+              <li class="spec"><span class="spec__value">6.5s</span><span class="spec__label">0&ndash;100 km/h</span></li>
+              <li class="spec"><span class="spec__value">180 km/h</span><span class="spec__label">Top Speed</span></li>
+            </ul>
+
+            <div class="info-panel__cta">
+              <button class="btn btn--primary">Monte o seu</button>
+              <button class="btn btn--ghost">Veja mais</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide"
+               data-index="2"
+               data-accent="#4cc9f0"
+               aria-roledescription="slide"
+               aria-label="3 of 5: Porsche 911 Turbo S"
+               role="group">
+        <div class="slide__bg">
+            <img src="./img/atlas.png">
+        </div>
+        <div class="slide__overlay"></div>
+        <div class="slide__gradient-sweep" aria-hidden="true"></div>
+
+        <div class="slide__image-wrap">
+          <img class="slide__image" src="./img/atlas.png" alt="Atlas">
+          <div class="slide__image-glow" aria-hidden="true"></div>
+        </div>
+
+        <div class="slide__content">
+          <div class="info-panel">
+            <p class="info-panel__eyebrow">Volkswagen</p>
+            <h1 class="info-panel__title">Atlas Cross Sport</h1>
+            <p class="info-panel__desc">Presença de SUV premium, atitude de quem nasceu para se destacar. O Atlas Cross Sport combina força, elegância e personalidade em cada detalhe.</p>
+
+            <ul class="info-panel__specs">
+              <li class="spec"><span class="spec__value">$230,000</span><span class="spec__label">Preço</span></li>
+              <li class="spec"><span class="spec__value">269 cv</span><span class="spec__label">Potência</span></li>
+              <li class="spec"><span class="spec__value">7.7s</span><span class="spec__label">0&ndash;100 km/h</span></li>
+              <li class="spec"><span class="spec__value">220 km/h</span><span class="spec__label">Top Speed</span></li>
+            </ul>
+
+            <div class="info-panel__cta">
+              <button class="btn btn--primary">Monte o seu</button>
+              <button class="btn btn--ghost">veja mais</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide"
+               data-index="3"
+               data-accent="#ff8c42"
+               aria-roledescription="slide"
+               aria-label="4 of 5: F-150"
+               role="group">
+        <div class="slide__bg">
+            <img src="./img/f-150.png">
+        </div>
+        <div class="slide__overlay"></div>
+        <div class="slide__gradient-sweep" aria-hidden="true"></div>
+
+        <div class="slide__image-wrap">
+          <img class="slide__image" src="./img/f-150.png" alt="f-150">
+          <div class="slide__image-glow" aria-hidden="true"></div>
+        </div>
+
+        <div class="slide__content">
+          <div class="info-panel">
+            <p class="info-panel__eyebrow">Ford</p>
+            <h1 class="info-panel__title">F-150</h1>
+            <p class="info-panel__desc">A F-150 não foi feita para acompanhar. Foi feita para liderar. Força, tecnologia e tradição reunidas na picape mais icônica da Ford.</p>
+
+            <ul class="info-panel__specs">
+              <li class="spec"><span class="spec__value">R$350.000</span><span class="spec__label">Preço</span></li>
+              <li class="spec"><span class="spec__value">405 cv</span><span class="spec__label">Potência</span></li>
+              <li class="spec"><span class="spec__value">7.1s</span><span class="spec__label">0&ndash;100 km/h</span></li>
+              <li class="spec"><span class="spec__value">200 km/h</span><span class="spec__label">Top Speed</span></li>
+            </ul>
+
+            <div class="info-panel__cta">
+              <button class="btn btn--primary">Monte o seu</button>
+              <button class="btn btn--ghost">Veja mais</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide"
+               data-index="4"
+               data-accent="#c9a961"
+               aria-roledescription="slide"
+               aria-label="5 of 5: Silverado"
+               role="group">
+        <div class="slide__bg">
+            <img src="./img/silverado.png">
+        </div>
+        <div class="slide__overlay"></div>
+        <div class="slide__gradient-sweep" aria-hidden="true"></div>
+
+        <div class="slide__image-wrap">
+          <img class="slide__image" src="./img/silverado.png" alt="Silverado">
+          <div class="slide__image-glow" aria-hidden="true"></div>
+        </div>
+
+        <div class="slide__content">
+          <div class="info-panel">
+            <p class="info-panel__eyebrow">Chevrolet</p>
+            <h1 class="info-panel__title">Silverado</h1>
+            <p class="info-panel__desc">Grande no tamanho, gigante na performance. A estrada respeita. O trabalho agradece. Feita para quem exige mais da sua caminhonete.</p>
+
+            <ul class="info-panel__specs">
+              <li class="spec"><span class="spec__value">R$330.000</span><span class="spec__label">Preço</span></li>
+              <li class="spec"><span class="spec__value">360 cv</span><span class="spec__label">Potência</span></li>
+              <li class="spec"><span class="spec__value">7.4s</span><span class="spec__label">0&ndash;100 km/h</span></li>
+              <li class="spec"><span class="spec__value">190 km/h</span><span class="spec__label">Top Speed</span></li>
+            </ul>
+
+            <div class="info-panel__cta">
+              <button class="btn btn--primary">Monte o seu</button>
+              <button class="btn btn--ghost">Veja mais</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /.slides -->
+
+    <!-- ===================================================
+         PREV / NEXT NAVIGATION
+    ==================================================== -->
+    <button class="nav-btn nav-btn--prev" id="prevBtn" aria-label="Previous car">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="nav-btn nav-btn--next" id="nextBtn" aria-label="Next car">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <!-- ===================================================
+         BOTTOM CONTROL CLUSTER
+         progress bar, pagination dots and thumbnails
+    ==================================================== -->
+    <div class="control-cluster">
+
+      <!-- Autoplay progress bar -->
+      <div class="progress-bar" role="presentation">
+        <div class="progress-bar__fill" id="progressFill"></div>
+      </div>
+
+      <div class="control-row">
+
+        <!-- Pagination dots -->
+        <div class="pagination" id="pagination" role="tablist" aria-label="Choose slide">
+          <button class="pagination__dot active" role="tab" aria-selected="true" aria-label="Go to slide 1" data-index="0"></button>
+          <button class="pagination__dot" role="tab" aria-selected="false" aria-label="Go to slide 2" data-index="1"></button>
+          <button class="pagination__dot" role="tab" aria-selected="false" aria-label="Go to slide 3" data-index="2"></button>
+          <button class="pagination__dot" role="tab" aria-selected="false" aria-label="Go to slide 4" data-index="3"></button>
+          <button class="pagination__dot" role="tab" aria-selected="false" aria-label="Go to slide 5" data-index="4"></button>
+        </div>
+
+        <!-- Thumbnails -->
+        <div class="thumbnails" id="thumbnails" aria-label="Car thumbnails">
+          <button class="thumb active" data-index="0" aria-label="Show Lamborghini Huracán STO" aria-current="true">
+            <img src="./img/arteon.png" alt="" loading="lazy">
+            <span class="thumb__label">Arteon</span>
+          </button>
+          <button class="thumb" data-index="1" aria-label="Show Ferrari 488 Pista">
+            <img src="./img/tundra.png" alt="" loading="lazy">
+            <span class="thumb__label">Tundra</span>
+          </button>
+          <button class="thumb" data-index="2" aria-label="Show Porsche 911 Turbo S">
+            <img src="./img/atlas.png" alt="" loading="lazy">
+            <span class="thumb__label">Atlas</span>
+          </button>
+          <button class="thumb" data-index="3" aria-label="Show McLaren 720S">
+            <img src="./img/f-150.png" alt="" loading="lazy">
+            <span class="thumb__label">F-150</span>
+          </button>
+          <button class="thumb" data-index="4" aria-label="Show Bugatti Chiron">
+            <img src="./img/silverado.png" alt="" loading="lazy">
+            <span class="thumb__label">Silverado</span>
+          </button>
+        </div>
+
+        <!-- Slide counter -->
+        <div class="counter" aria-hidden="true">
+          <span class="counter__current" id="counterCurrent">01</span>
+          <span class="counter__divider">/</span>
+          <span class="counter__total">05</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
