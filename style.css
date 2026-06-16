@@ -14,7 +14,7 @@ body {
   font-family: var(--font-body);
   color: var(--color-text);
   background: var(--color-bg);
-  overflow: hidden; /* the slider owns the viewport */
+  overflow: hidden; 
   -webkit-font-smoothing: antialiased;
 }
 
@@ -71,7 +71,6 @@ ul {
   height: 100dvh;
   overflow: hidden;
   background: var(--color-bg);
-  /* smooth transition whenever the accent variable changes between slides */
   transition: background var(--t-slow) var(--ease-smooth);
 }
 

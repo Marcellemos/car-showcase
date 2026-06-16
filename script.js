@@ -1,9 +1,3 @@
-/* =====================================================================
-   VELOCITÀ — Premium Car Showcase Slider
-   JavaScript: slide switching, autoplay/progress bar, reveal
-   animations, pagination, thumbnails, swipe & keyboard support.
-   ===================================================================== */
-
 (() => {
   'use strict';
 
