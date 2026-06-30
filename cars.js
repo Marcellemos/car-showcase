@@ -1,0 +1,74 @@
+/**
+ * cars.js — Fonte única de verdade para os dados do showcase.
+ *
+ * Para adicionar ou editar um carro, edite apenas este arquivo.
+ * O HTML e os controles são gerados automaticamente pelo slider.js.
+ */
+
+export const cars = [
+  {
+    brand:  'Volkswagen',
+    model:  'Arteon',
+    accent: '#f2c14e',
+    image:  'img/arteon.png',
+    desc:   'Design que chama atenção sem precisar exagerar. O VW que parece ter saído de uma categoria acima — esportividade, sofisticação e personalidade no mesmo carro.',
+    specs: {
+      price:  'R$180.000',
+      power:  '320cv',
+      sprint: '4,9s',
+      top:    '250km/h',
+    },
+  },
+  {
+    brand:  'Toyota',
+    model:  'Tundra',
+    accent: '#e63946',
+    image:  'img/tundra.png',
+    desc:   'A Tundra não pede passagem — ela abre caminho. Força bruta com a confiabilidade que só a Toyota entrega. Grande no tamanho, gigante na presença.',
+    specs: {
+      price:  'R$300.000',
+      power:  '360cv',
+      sprint: '6,5s',
+      top:    '180km/h',
+    },
+  },
+  {
+    brand:  'Volkswagen',
+    model:  'Atlas',
+    accent: '#4cc9f0',
+    image:  'img/atlas.png',
+    desc:   'Presença de SUV premium, atitude de quem nasceu para se destacar. O Atlas Cross Sport combina força, elegância e personalidade em cada detalhe.',
+    specs: {
+      price:  'R$230.000',
+      power:  '269cv',
+      sprint: '7,7s',
+      top:    '220km/h',
+    },
+  },
+  {
+    brand:  'Ford',
+    model:  'F-150',
+    accent: '#ff8c42',
+    image:  'img/f-150.png',
+    desc:   'A F-150 não foi feita para acompanhar — foi feita para liderar. Força, tecnologia e tradição reunidas na picape mais icônica da Ford.',
+    specs: {
+      price:  'R$350.000',
+      power:  '405cv',
+      sprint: '7,1s',
+      top:    '200km/h',
+    },
+  },
+  {
+    brand:  'Chevrolet',
+    model:  'Silverado',
+    accent: '#c9a961',
+    image:  'img/silverado.png',
+    desc:   'Grande no tamanho, gigante na performance. A estrada respeita. O trabalho agradece. Feita para quem exige mais da sua caminhonete.',
+    specs: {
+      price:  'R$330.000',
+      power:  '360cv',
+      sprint: '7,4s',
+      top:    '190km/h',
+    },
+  },
+];
