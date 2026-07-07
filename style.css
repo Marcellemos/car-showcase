@@ -76,3 +76,89 @@ body {
   /* Outros */
   --panel-blur: 18px;
 }
+
+/* 4. SLIDER — CONTAINER PRINCIPAL */
+.slider {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--color-bg);
+  transition: background var(--t-slow) var(--ease-smooth);
+}
+
+/* 5. ATMOSFERA AMBIENTE — grain + vignette */
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image:
+    radial-gradient(circle at 20% 30%, #fff 0.5px, transparent 0.5px),
+    radial-gradient(circle at 70% 65%, #fff 0.5px, transparent 0.5px),
+    radial-gradient(circle at 40% 80%, #fff 0.5px, transparent 0.5px);
+  background-size: 6px 6px, 9px 9px, 7px 7px;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 31;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 35%);
+}
+
+/* 6. BRAND HEADER */
+.brand {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.75rem clamp(1.25rem, 4vw, 3.5rem);
+  letter-spacing: 0.18em;
+  pointer-events: none;
+}
+
+.brand__mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--accent);
+  box-shadow: 0 0 16px var(--accent-soft);
+  transition: color var(--t-slow) var(--ease-smooth),
+              box-shadow var(--t-slow) var(--ease-smooth);
+}
+
+.brand__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.brand__tag {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  display: none;
+}
+
+@media (min-width: 700px) {
+  .brand__tag { display: inline; }
+}
+
