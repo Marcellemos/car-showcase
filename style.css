@@ -1,0 +1,78 @@
+/* 1. RESET */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* 2. TIPOGRAFIA E CORES GLOBAIS */
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 3. VARIÁVEIS DE DESIGN (TOKENS) */
+:root {
+  /* Paleta */
+  --color-bg:        #07060a;
+  --color-bg-soft:   #0f0e14;
+  --color-surface:   rgba(255, 255, 255, 0.06);
+  --color-surface-2: rgba(255, 255, 255, 0.10);
+  --color-border:    rgba(255, 255, 255, 0.12);
+  --color-text:      #f5f3ee;
+  --color-text-dim:  #b9b6c2;
+  --color-muted:     #82808d;
+
+  --color-gold:        #d4af6a;
+  --color-gold-bright: #f4d9a0;
+
+  /* Accent — sobrescrito por slide via JS */
+  --accent:      #d4af6a;
+  --accent-soft: rgba(212, 175, 106, 0.35);
+
+  /* Tipografia */
+  --font-display: 'Oswald', 'Arial Narrow', sans-serif;
+  --font-body:    'Outfit', 'Segoe UI', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+
+  /* Curvas de easing */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth:    cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Durações */
+  --t-slow: 1.1s;
+  --t-med:  0.6s;
+  --t-fast: 0.3s;
+
+  /* Autoplay — única fonte de verdade; lida pelo slider.js */
+  --autoplay-duration: 6000ms;
+
+  /* Outros */
+  --panel-blur: 18px;
+}
