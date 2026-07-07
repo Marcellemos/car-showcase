@@ -278,3 +278,98 @@ body {
   pointer-events: none;
 }
 
+/* 9. INFO PANEL — glassmorphism + reveal escalonado */
+.slide__content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  padding: 0 clamp(1.25rem, 5vw, 5.5rem);
+}
+
+.info-panel {
+  max-width: 420px;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  background: linear-gradient(150deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  border: 1px solid var(--color-border);
+  border-radius: 22px;
+  backdrop-filter: blur(var(--panel-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(140%);
+  box-shadow:
+    0 25px 60px -20px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+/* Filhos começam invisíveis; .reveal dispara o reveal escalonado */
+.info-panel > * {
+  opacity: 0;
+  transform: translateY(28px) scale(0.97);
+}
+
+.info-panel.reveal > * {
+  animation: contentRise 0.85s var(--ease-cinematic) forwards;
+}
+
+/* Delays escalonados — eyebrow lidera, CTAs chegam por último */
+.info-panel.reveal > *:nth-child(1) { animation-delay: 0.05s; }
+.info-panel.reveal > *:nth-child(2) { animation-delay: 0.16s; }
+.info-panel.reveal > *:nth-child(3) { animation-delay: 0.27s; }
+.info-panel.reveal > *:nth-child(4) { animation-delay: 0.38s; }
+.info-panel.reveal > *:nth-child(5) { animation-delay: 0.50s; }
+.info-panel.reveal > *:nth-child(6) { animation-delay: 0.62s; }
+
+.info-panel__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  transition: color var(--t-slow) var(--ease-smooth);
+}
+
+.info-panel__title {
+  margin-top: 0.35rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.info-panel__desc {
+  font-size: clamp(0.88rem, 1.4vw, 1rem);
+  line-height: 1.7;
+  color: var(--color-text-dim);
+  max-width: 46ch;
+}
+
+/* Grid de specs: preço / potência / 0-100 / top speed */
+.info-panel__specs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.spec__value {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: clamp(0.95rem, 1.8vw, 1.25rem);
+  color: var(--color-text);
+  text-shadow: 0 0 12px var(--accent-soft);
+}
+
+.spec__label {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
