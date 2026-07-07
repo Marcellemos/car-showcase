@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LEMOS Car Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="slider" id="slider" role="region" aria-roledescription="carousel" aria-label="car showcase">
+
+    <div class="grain" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <header class="brand">
+      <span class="brand__mark" aria-hidden="true">LCS</span>
+      <span class="brand__name">LEMOS Car Showcase</span>
+      <span class="brand__tag">Est. Performance</span>
+    </header>
+
+    <!-- SLIDES — geradas dinamicamente pelo slider.js a partir de cars.js -->
+    <div class="slides" id="slidesTrack" aria-live="polite"></div>
+
+    <!-- PREV / NEXT -->
+    <button class="nav-btn nav-btn--prev" id="prevBtn" aria-label="Carro anterior">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="nav-btn nav-btn--next" id="nextBtn" aria-label="Próximo carro">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <!-- BOTTOM CONTROL CLUSTER Dots e thumbnails são gerados pelo slider.js -->
+    <div class="control-cluster">
+
+      <div class="progress-bar" role="presentation">
+        <div class="progress-bar__fill" id="progressFill"></div>
+      </div>
+
+      <div class="control-row">
+
+        <div class="pagination"
+             id="pagination"
+             role="tablist"
+             aria-label="Escolher slide">
+          <!-- gerado pelo slider.js -->
+        </div>
+
+        <div class="thumbnails" id="thumbnails" aria-label="Miniaturas dos carros">
+          <!-- gerado pelo slider.js -->
+        </div>
+
+        <div class="counter" aria-hidden="true">
+          <span class="counter__current" id="counterCurrent">01</span>
+          <span class="counter__divider">/</span>
+          <span class="counter__total">01</span>
+          <!-- atualizado pelo slider.js -->
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script type="module" src="slider.js"></script>
+</body>
+</html>
