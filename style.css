@@ -373,3 +373,321 @@ body {
   text-transform: uppercase;
   color: var(--color-muted);
 }
+
+/* 10. BOTÕES — primary / ghost com ripple de cursor */
+.info-panel__cta {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  padding: 0.85rem 1.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  transition:
+    transform    var(--t-fast) var(--ease-smooth),
+    box-shadow   var(--t-fast) var(--ease-smooth),
+    color        var(--t-fast) var(--ease-smooth),
+    border-color var(--t-fast) var(--ease-smooth);
+}
+
+.btn--primary {
+  color: #1a1408;
+  background: linear-gradient(135deg, var(--accent), var(--color-gold-bright));
+  box-shadow: 0 8px 24px -8px var(--accent-soft);
+}
+
+.btn--ghost {
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-border);
+}
+
+/* Ripple: expande a partir da posição do cursor (--mx / --my via JS) */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255,255,255,0.45),
+    transparent 60%
+  );
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--t-fast) ease-out,
+              transform var(--t-fast) ease-out;
+  pointer-events: none;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+}
+
+.btn--primary:hover {
+  box-shadow: 0 14px 32px -10px var(--accent-soft);
+}
+
+.btn--ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn:hover::after,
+.btn:focus-visible::after {
+  opacity: 1;
+  transform: scale(1.4);
+}
+
+/* 11. NAVEGAÇÃO PREV / NEXT */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: clamp(44px, 5vw, 58px);
+  height: clamp(44px, 5vw, 58px);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(10px);
+  color: var(--color-text);
+  overflow: hidden;
+  transition:
+    border-color var(--t-fast) var(--ease-smooth),
+    color        var(--t-fast) var(--ease-smooth),
+    transform    var(--t-fast) var(--ease-smooth);
+}
+
+.nav-btn svg {
+  width: 45%;
+  height: 45%;
+  position: relative;
+  z-index: 1;
+}
+
+.nav-btn--prev { left:  clamp(0.75rem, 2.5vw, 2.5rem); }
+.nav-btn--next { right: clamp(0.75rem, 2.5vw, 2.5rem); }
+
+/* Ripple de fundo — expande do centro ao hover */
+.nav-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  transform: scale(0);
+  transition: transform 0.5s var(--ease-smooth),
+              opacity   0.5s var(--ease-smooth);
+}
+
+.nav-btn:hover,
+.nav-btn:focus-visible {
+  border-color: var(--accent);
+  color: #1a1408;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.nav-btn:hover::before,
+.nav-btn:focus-visible::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.nav-btn:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+/* 12. CLUSTER DE CONTROLES — progress bar, dots, thumbnails, counter */
+.control-cluster {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  padding: 0 clamp(1.25rem, 5vw, 3.5rem) clamp(1rem, 2.5vh, 1.75rem);
+}
+
+/* Progress bar: preenche ao longo de --autoplay-duration; pausa com CSS */
+.progress-bar {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+  margin-bottom: 1.1rem;
+}
+
+.progress-bar__fill {
+  position: absolute;
+  inset: 0;
+  width: 0%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--color-gold-bright));
+  box-shadow: 0 0 12px var(--accent-soft);
+  transform-origin: left center;
+}
+
+/* JS alterna .running para (re)iniciar o preenchimento */
+.progress-bar__fill.running {
+  animation: progressFill var(--autoplay-duration) linear forwards;
+}
+
+/* Congelamento visual ao pausar por hover */
+.slider.is-paused .progress-bar__fill.running {
+  animation-play-state: paused;
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+}
+
+/* — Dots — */
+.pagination {
+  display: flex;
+  gap: 0.55rem;
+  flex-shrink: 0;
+}
+
+.pagination__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  transition:
+    background   var(--t-fast) var(--ease-smooth),
+    transform    var(--t-fast) var(--ease-smooth),
+    box-shadow   var(--t-fast) var(--ease-smooth),
+    width        var(--t-med)  var(--ease-smooth);
+}
+
+.pagination__dot:hover {
+  background: rgba(255,255,255,0.4);
+  transform: scale(1.2);
+}
+
+.pagination__dot.active {
+  width: 26px;
+  border-radius: 5px;
+  background: var(--accent);
+  box-shadow: 0 0 14px var(--accent-soft);
+  animation: dotPulse 0.5s var(--ease-cinematic);
+}
+
+/* — Thumbnails — */
+.thumbnails {
+  display: flex;
+  gap: 0.65rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.thumbnails::-webkit-scrollbar { display: none; }
+
+.thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(58px, 7vw, 84px);
+  height: clamp(40px, 5vw, 56px);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid transparent;
+  opacity: 0.55;
+  transform: scale(0.94);
+  transition:
+    opacity      var(--t-med) var(--ease-smooth),
+    transform    var(--t-med) var(--ease-cinematic),
+    border-color var(--t-med) var(--ease-smooth),
+    box-shadow   var(--t-med) var(--ease-smooth);
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb__label {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 0.18rem 0.4rem;
+  font-size: 0.55rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--color-text);
+  background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity var(--t-fast) ease,
+              transform var(--t-fast) ease;
+}
+
+.thumb:hover {
+  opacity: 0.9;
+  transform: scale(1.0);
+}
+
+.thumb:hover .thumb__label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.thumb.active {
+  opacity: 1;
+  transform: scale(1.06);
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 8px 22px -6px var(--accent-soft),
+    0 0 22px var(--accent-soft);
+  animation: thumbGlow 2.6s ease-in-out infinite;
+}
+
+.thumb.active .thumb__label {
+  opacity: 1;
+  transform: translateY(0);
+  color: var(--accent);
+}
+
+/* — Counter — */
+.counter {
+  display: none;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+
+.counter__current {
+  font-size: 1.1rem;
+  color: var(--accent);
+  transition: color var(--t-slow) var(--ease-smooth);
+}
+
+.counter__divider,
+.counter__total {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+@media (min-width: 640px) {
+  .counter { display: flex; }
+}
+
