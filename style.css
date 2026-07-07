@@ -162,3 +162,119 @@ body {
   .brand__tag { display: inline; }
 }
 
+/* 7. STAGE DAS SLIDES E CAMADAS DE FUNDO */
+.slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1;
+  transition: opacity var(--t-slow) var(--ease-cinematic),
+              visibility var(--t-slow);
+}
+
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+
+/* Foto de fundo full-bleed com zoom "ken burns" suave enquanto ativa */
+.slide__bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.slide__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transform: scale(1.12);
+  filter: saturate(1.05) brightness(0.85);
+  transition: transform 7s var(--ease-smooth);
+  will-change: transform;
+}
+
+.slide.active .slide__bg img {
+  transform: scale(1);
+}
+
+/* Overlay escuro para legibilidade do texto sobre qualquer foto */
+.slide__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(110deg,
+      rgba(5,4,8,0.94) 0%,
+      rgba(5,4,8,0.78) 28%,
+      rgba(5,4,8,0.35) 55%,
+      rgba(5,4,8,0.55) 100%);
+}
+
+/* Varredura de luz diagonal — sugere movimento / iluminação de estúdio */
+.slide__gradient-sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg,
+    transparent 30%,
+    var(--accent-soft) 48%,
+    transparent 66%);
+  background-size: 250% 250%;
+  opacity: 0;
+  mix-blend-mode: soft-light;
+  transition: opacity var(--t-slow) var(--ease-smooth);
+}
+
+.slide.active .slide__gradient-sweep {
+  opacity: 0.55;
+  animation: sweepMove 9s linear infinite;
+}
+
+/* 8. IMAGEM HERO DO CARRO — entrada com rotação, zoom e glow */
+.slide__image-wrap {
+  position: absolute;
+  right: clamp(1rem, 5vw, 6vw);
+  bottom: clamp(2rem, 8vh, 9vh);
+  width: min(58vw, 920px);
+  max-width: 92vw;
+  z-index: 5;
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.65));
+  opacity: 0;
+  transform: translateX(18%) rotate(8deg) scale(0.88);
+}
+
+/* JS adiciona .reveal para (re)disparar a entrada a cada ativação */
+.slide.active .slide__image-wrap.reveal {
+  animation: imageSlideIn 1.4s var(--ease-cinematic) forwards;
+}
+
+.slide__image {
+  width: 100%;
+  border-radius: 18px;
+  object-fit: cover;
+  aspect-ratio: 16 / 9;
+}
+
+/* Aura de brilho atrás da imagem, colorida pelo accent do slide */
+.slide__image-glow {
+  position: absolute;
+  inset: -6%;
+  z-index: -1;
+  border-radius: 28px;
+  background: radial-gradient(circle at 60% 50%, var(--accent-soft), transparent 70%);
+  filter: blur(40px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
