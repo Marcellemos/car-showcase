@@ -691,3 +691,216 @@ body {
   .counter { display: flex; }
 }
 
+/* 13. BIBLIOTECA DE KEYFRAMES */
+/* Zoom suave contínuo na foto de fundo enquanto o slide está ativo */
+@keyframes kenBurns {
+  from { transform: scale(1.0)  translate3d(0,0,0); }
+  to   { transform: scale(1.08) translate3d(-1.5%, -1%, 0); }
+}
+
+/* Varredura diagonal de luz */
+@keyframes sweepMove {
+  0%   { background-position: 0%   0%; }
+  100% { background-position: 100% 100%; }
+}
+
+/* Imagem hero: entra da direita com leve rotação e escala até o lugar */
+@keyframes imageSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(22%) translateY(2%) rotate(9deg) scale(0.82);
+    filter: blur(6px) drop-shadow(0 30px 60px rgba(0,0,0,0.65));
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(-2%) rotate(-1.5deg) scale(1.03);
+    filter: blur(0px) drop-shadow(0 30px 60px rgba(0,0,0,0.65));
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+    filter: blur(0px) drop-shadow(0 30px 60px rgba(0,0,0,0.65));
+  }
+}
+
+/* Texto do info panel: fade + slide-up + scale, aplicado com stagger */
+@keyframes contentRise {
+  0% {
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Progress bar: preenche de 0 a 100% ao longo de --autoplay-duration */
+@keyframes progressFill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* Pop do dot ativo */
+@keyframes dotPulse {
+  0%   { transform: scaleX(0.4); }
+  60%  { transform: scaleX(1.15); }
+  100% { transform: scaleX(1); }
+}
+
+/* Glow pulsante do thumbnail ativo */
+@keyframes thumbGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px var(--accent),
+      0 8px 22px -6px var(--accent-soft),
+      0 0 16px var(--accent-soft);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px var(--accent),
+      0 8px 28px -6px var(--accent-soft),
+      0 0 30px var(--accent-soft);
+  }
+}
+
+/* Fade-in genérico para first paint */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* 14. ACESSIBILIDADE E REDUCED MOTION */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:       0.01ms !important;
+    animation-iteration-count: 1     !important;
+    transition-duration:      0.01ms !important;
+    scroll-behavior: auto           !important;
+  }
+  .slide.active .slide__bg,
+  .slide.active .slide__gradient-sweep,
+  .thumb.active {
+    animation: none !important;
+  }
+}
+
+/* 15. BREAKPOINTS RESPONSIVOS */
+/* — Tablet — */
+@media (max-width: 1024px) {
+  .slide__image-wrap {
+    width: min(70vw, 760px);
+    bottom: 13rem;
+  }
+
+  .info-panel {
+    max-width: 90vw;
+  }
+
+  .info-panel__specs {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+}
+
+/* — Mobile — */
+@media (max-width: 720px) {
+  .slide {
+    align-items: flex-start;
+  }
+
+  .slide__bg {
+    filter: saturate(1.05) brightness(0.6);
+  }
+
+  .slide__overlay {
+    background:
+      linear-gradient(to bottom,
+        rgba(5,4,8,0.55) 0%,
+        rgba(5,4,8,0.55) 38%,
+        rgba(5,4,8,0.97) 78%,
+        rgba(5,4,8,1)    100%);
+  }
+
+  .slide__image-wrap {
+    position: absolute;
+    top: 5.5rem;
+    right: 5%;
+    left: 5%;
+    bottom: auto;
+    width: 90%;
+  }
+
+  .slide__image {
+    aspect-ratio: 4 / 3;
+  }
+
+  .slide__content {
+    margin-top: auto;
+    padding-bottom: 7.5rem;
+  }
+
+  .info-panel {
+    max-width: 100%;
+    padding: 1.25rem 1.25rem 1.5rem;
+    border-radius: 18px;
+  }
+
+  .info-panel__title {
+    font-size: clamp(2.2rem, 11vw, 3rem);
+  }
+
+  .info-panel__desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .info-panel__specs {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 0.9rem;
+  }
+
+  .nav-btn {
+    top: auto;
+    bottom: 11.5rem;
+    transform: none;
+  }
+
+  .nav-btn:hover,
+  .nav-btn:focus-visible,
+  .nav-btn:active {
+    transform: scale(1.05);
+  }
+
+  .nav-btn--prev { left:  1rem; }
+  .nav-btn--next { right: 1rem; }
+
+  .control-row {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .pagination { order: 2; }
+  .thumbnails { order: 1; width: 100%; }
+  .counter    { order: 3; }
+
+  .thumb__label { display: none; }
+}
+
+/* — Telefones pequenos — */
+@media (max-width: 380px) {
+  .info-panel__specs { grid-template-columns: repeat(2, 1fr); }
+  .info-panel__title { font-size: 2.1rem; }
+  .brand             { padding: 1.25rem 1rem; }
+}
+
