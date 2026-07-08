@@ -74,10 +74,6 @@ import { cars } from './cars.js';
 
             <ul class="info-panel__specs">
               <li class="spec">
-                <span class="spec__value">${car.specs.price}</span>
-                <span class="spec__label">Preço</span>
-              </li>
-              <li class="spec">
                 <span class="spec__value">${car.specs.power}</span>
                 <span class="spec__label">Potência</span>
               </li>
