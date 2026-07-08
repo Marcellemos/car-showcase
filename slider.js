@@ -152,3 +152,119 @@ import { cars } from './cars.js';
     const totalEl = document.querySelector('.counter__total');
     if (totalEl) totalEl.textContent = String(total).padStart(2, '0');
   }
+
+  /* 5. REFERÊNCIAS DINÂMICAS */
+  function getSlides() {
+    return Array.from(slidesTrack.querySelectorAll('.slide'));
+  }
+
+  function getDots() {
+    return Array.from(pagination.querySelectorAll('.pagination__dot'));
+  }
+
+  function getThumbs() {
+    return Array.from(thumbnails.querySelectorAll('.thumb'));
+  }
+
+  /* 6. UTILITÁRIOS */
+  function normalizeIndex(index) {
+    return ((index % state.total) + state.total) % state.total;
+  }
+
+  function hexToRgb(hex) {
+    const sanitized = hex
+      .replace('#', '')
+      .replace(/^([a-f\d])([a-f\d])([a-f\d])$/i, '$1$1$2$2$3$3')
+      .substring(0, 6); 
+
+    const [r, g, b] = sanitized.match(/.{2}/g).map(v => parseInt(v, 16));
+    return `${r}, ${g}, ${b}`;
+  }
+
+  function restartAnimation(el, className) {
+    if (!el) return;
+    el.classList.remove(className);
+    void el.offsetWidth; 
+    el.classList.add(className);
+  }
+
+  /* 7. ATUALIZAÇÃO DE TEMA POR SLIDE */
+
+  function applyAccentTheme(accent) {
+    const root = document.documentElement;
+    root.style.setProperty('--accent', accent);
+    root.style.setProperty('--accent-soft', `rgba(${hexToRgb(accent)}, 0.35)`);
+  }
+
+  /* 8. ANIMAÇÕES DE TRANSIÇÃO */
+  function deactivateSlide(slide) {
+    slide.classList.remove('active');
+    slide.querySelector('.info-panel')?.classList.remove('reveal');
+    slide.querySelector('.slide__image-wrap')?.classList.remove('reveal');
+  }
+
+  function activateSlide(slide) {
+    slide.classList.add('active');
+
+    requestAnimationFrame(() => {
+      restartAnimation(slide.querySelector('.info-panel'), 'reveal');
+      restartAnimation(slide.querySelector('.slide__image-wrap'), 'reveal');
+    });
+  }
+
+  /* 9. SINCRONIZAÇÃO DE CONTROLES DE UI */
+  /** Atualiza os dots de paginação para refletir o índice atual. */
+  function syncDots(activeIndex) {
+    getDots().forEach((dot, i) => {
+      const isActive = i === activeIndex;
+      dot.classList.toggle('active', isActive);
+      dot.setAttribute('aria-selected', String(isActive));
+    });
+  }
+
+  /** Atualiza os thumbnails e faz scroll suave para o ativo. */
+  function syncThumbnails(activeIndex) {
+    getThumbs().forEach((thumb, i) => {
+      const isActive = i === activeIndex;
+      thumb.classList.toggle('active', isActive);
+
+      if (isActive) {
+        thumb.setAttribute('aria-current', 'true');
+        thumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      } else {
+        thumb.removeAttribute('aria-current');
+      }
+    });
+  }
+
+  /** Atualiza o contador numérico de slide. */
+  function syncCounter(activeIndex) {
+    counterEl.textContent = String(activeIndex + 1).padStart(2, '0');
+  }
+
+  /** Reinicia a barra de progresso do autoplay. */
+  function restartProgressBar() {
+    restartAnimation(progressFill, 'running');
+  }
+
+  /* 10. TRANSIÇÃO PRINCIPAL */
+
+  function goToSlide(index) {
+    const nextIndex = normalizeIndex(index);
+    if (nextIndex === state.current) return;
+
+    const slides = getSlides();
+    deactivateSlide(slides[state.current]);
+    activateSlide(slides[nextIndex]);
+
+    applyAccentTheme(cars[nextIndex].accent);
+    syncDots(nextIndex);
+    syncThumbnails(nextIndex);
+    syncCounter(nextIndex);
+    restartProgressBar();
+
+    state.current = nextIndex;
+  }
+
+  const nextSlide = () => goToSlide(state.current + 1);
+  const prevSlide = () => goToSlide(state.current - 1);
