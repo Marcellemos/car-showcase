@@ -22,8 +22,9 @@ import { cars } from './cars.js';
   };
 
   /* 3. SELEÇÃO DE DOM COM GUARD CLAUSE */
-    @throws {Error} 
-   
+  /**
+   * @throws {Error}
+   */
   function getRequiredElement(id) {
     const el = document.getElementById(id);
     if (!el) throw new Error(`[Slider] Elemento obrigatório não encontrado: #${id}`);
@@ -268,3 +269,117 @@ import { cars } from './cars.js';
 
   const nextSlide = () => goToSlide(state.current + 1);
   const prevSlide = () => goToSlide(state.current - 1);
+
+   /* 11. AUTOPLAY */
+  function pauseAutoplay(source) {
+    state.isPaused   = true;
+    state.pauseSource = source;
+    slider.classList.add('is-paused');
+  }
+
+  function resumeAutoplay(source) {
+    if (state.pauseSource !== source) return;
+    state.isPaused    = false;
+    state.pauseSource = null;
+    slider.classList.remove('is-paused');
+  }
+
+  progressFill.addEventListener('animationend', (e) => {
+    if (e.animationName !== 'progressFill') return;
+    if (state.isPaused) return;
+    nextSlide();
+  });
+
+  /* 12. Botões de navegação */
+  prevBtn.addEventListener('click', prevSlide);
+  nextBtn.addEventListener('click', nextSlide);
+
+  // Ripple: posiciona o gradiente radial do ::after no ponto do cursor.
+  slider.querySelectorAll('.btn, .nav-btn').forEach((btn) => {
+    btn.addEventListener('pointermove', (e) => {
+      const { left, top, width, height } = btn.getBoundingClientRect();
+      btn.style.setProperty('--mx', `${((e.clientX - left) / width)  * 100}%`);
+      btn.style.setProperty('--my', `${((e.clientY - top)  / height) * 100}%`);
+    });
+  });
+
+  /* Dots e thumbnails (delegação de evento no container) */
+  pagination.addEventListener('click', (e) => {
+    const dot = e.target.closest('.pagination__dot');
+    if (dot) goToSlide(Number(dot.dataset.index));
+  });
+
+  thumbnails.addEventListener('click', (e) => {
+    const thumb = e.target.closest('.thumb');
+    if (thumb) goToSlide(Number(thumb.dataset.index));
+  });
+
+  /* Pausa por hover de mouse */
+  slider.addEventListener('mouseenter', () => pauseAutoplay('hover'));
+  slider.addEventListener('mouseleave', () => resumeAutoplay('hover'));
+
+  /* Pausa por foco de teclado (acessibilidade) */
+  slider.addEventListener('focusin',  () => pauseAutoplay('focus'));
+  slider.addEventListener('focusout', () => resumeAutoplay('focus'));
+
+  /* Teclado — somente quando o foco não está em campo de input */
+  document.addEventListener('keydown', (e) => {
+    if (e.target.closest('input, textarea, select, [contenteditable]')) return;
+
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      nextSlide();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      prevSlide();
+    }
+  });
+
+  /* Touch / swipe — horizontal domina para evitar sequestro de scroll */
+  slider.addEventListener('touchstart', (e) => {
+    state.touchStartX = e.changedTouches[0].clientX;
+    state.touchStartY = e.changedTouches[0].clientY;
+    pauseAutoplay('touch');
+  }, { passive: true });
+
+  slider.addEventListener('touchend', (e) => {
+    const deltaX = e.changedTouches[0].clientX - state.touchStartX;
+    const deltaY = e.changedTouches[0].clientY - state.touchStartY;
+    const isHorizontalSwipe = Math.abs(deltaX) > SWIPE_THRESHOLD
+                           && Math.abs(deltaX) > Math.abs(deltaY);
+
+    if (isHorizontalSwipe) {
+      deltaX < 0 ? nextSlide() : prevSlide();
+    }
+
+    resumeAutoplay('touch');
+  }, { passive: true });
+
+  /* 13. INICIALIZAÇÃO */
+  function init() {
+    renderSlider();
+
+    const firstSlide = getSlides()[0];
+    if (!firstSlide) throw new Error('[Slider] Nenhum slide encontrado após renderização.');
+
+    applyAccentTheme(cars[0].accent);
+
+    requestAnimationFrame(() => {
+      firstSlide.querySelector('.info-panel')?.classList.add('reveal');
+      firstSlide.querySelector('.slide__image-wrap')?.classList.add('reveal');
+      restartProgressBar();
+    });
+
+    // Registra listeners de ripple nos botões gerados dinamicamente
+    slider.querySelectorAll('.btn').forEach((btn) => {
+      btn.addEventListener('pointermove', (e) => {
+        const { left, top, width, height } = btn.getBoundingClientRect();
+        btn.style.setProperty('--mx', `${((e.clientX - left) / width)  * 100}%`);
+        btn.style.setProperty('--my', `${((e.clientY - top)  / height) * 100}%`);
+      });
+    });
+  }
+
+  init();
+
+})();
