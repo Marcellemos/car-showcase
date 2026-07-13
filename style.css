@@ -848,27 +848,28 @@ body {
     padding-bottom: 7.5rem;
   }
 
-  .info-panel {
-    max-width: 100%;
-    padding: 1.25rem 1.25rem 1.5rem;
-    border-radius: 18px;
-  }
+  @media (max-width: 720px) {
 
-  .info-panel__title {
-    font-size: clamp(2.2rem, 11vw, 3rem);
-  }
+    .info-panel__desc,
+    .info-panel__specs,
+    .info-panel__cta,
+    .info-panel__eyebrow {
+        display: none;
+    }
 
-  .info-panel__desc {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+    .info-panel {
+        padding: 0.8rem 1rem;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        backdrop-filter: none;
+    }
 
-  .info-panel__specs {
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: 0.9rem;
-  }
+    .info-panel__title {
+        font-size: 2rem;
+        text-align: center;
+    }
+}
 
   .nav-btn {
     top: auto;
